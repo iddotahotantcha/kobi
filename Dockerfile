@@ -13,14 +13,15 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copy project files
 COPY . .
 
+# Create .env automatically
+RUN cp .env.example .env
+
 # Install Laravel dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Generate app key
+# Generate key
 RUN php artisan key:generate
 
-# Expose port
 EXPOSE 10000
 
-# Start Laravel
 CMD php artisan serve --host=0.0.0.0 --port=10000
