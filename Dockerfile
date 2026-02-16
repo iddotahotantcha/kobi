@@ -21,4 +21,7 @@ RUN composer install --no-dev --optimize-autoloader --no-scripts
 RUN php artisan key:generate
 RUN php artisan config:cache
 
+RUN php artisan migrate --force
+
+
 CMD php artisan serve --host=0.0.0.0 --port=10000
