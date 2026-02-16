@@ -80,6 +80,12 @@
                                 <i class="bi bi-box-arrow-in-right"></i> Se connecter
                             </button>
                         </div>
+                        <div class="text-center mt-3">
+    <small class="text-muted">
+        Première connexion ? 
+        <a href="{{ route('register') }}" class="text-decoration-none">Créer un compte directeur</a>
+    </small>
+</div>
                     </form>
                     
                     <div class="text-center mt-3">

@@ -6,6 +6,11 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\ClasseController;
 use App\Http\Controllers\MatiereController;
+use App\Http\Controllers\RegisterController;
+
+// Routes d'inscription (uniquement si aucun admin existe)
+Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register')->middleware('guest');
+Route::post('/register', [RegisterController::class, 'register']);
 
 // Page d'accueil
 Route::get('/', function () {
@@ -16,6 +21,14 @@ Route::get('/', function () {
             return redirect('/teacher/dashboard');
         }
     }
+    
+    // Vérifier s'il existe un admin
+    $adminExists = \App\Models\User::where('role', 'admin')->exists();
+    
+    if (!$adminExists) {
+        return redirect('/register');
+    }
+    
     return redirect('/login');
 });
 
@@ -57,20 +70,20 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/teachers/{teacher}/resend-credentials', [TeacherController::class, 'resendCredentials'])
         ->name('teachers.resend-credentials');
 
-    // Routes CRUD pour les classes
+    // Routes CRUD pour les classes (avec paramètre personnalisé)
     Route::resource('classes', ClasseController::class)->parameter('classes', 'classe');
 
     // Routes CRUD pour les matières
     Route::resource('matieres', MatiereController::class);
 
     // Routes pour Rapports et Paramètres
-Route::get('/reports', function () {
-    return view('reports.index');
-})->name('reports.index');
+    Route::get('/reports', function () {
+        return view('reports.index');
+    })->name('reports.index');
 
-Route::get('/settings', function () {
-    return view('settings.index');
-})->name('settings.index');
+    Route::get('/settings', function () {
+        return view('settings.index');
+    })->name('settings.index');
 });
 
 // Routes enseignant
